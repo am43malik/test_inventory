@@ -1,12 +1,12 @@
 import Joi from "joi";
 import Item from "../Model/Item";
 import Product from "../Model/Product";
-
+const date = require("date-and-time");
 const itemController = {
   async items(req, res, next) {
     let item;
     try {
-      item = await Item.find();
+      item = await Product.find();
       if (!item) {
         return next(new Error("items not found!"));
       }
@@ -14,6 +14,30 @@ const itemController = {
       return next(error);
     }
     res.json(item);
+  },
+
+  async getPrevStockInInfo(req, res) {
+    let pre;
+    // if (!req.body.from || !req.body.to) {
+    //   console.log(req.body.to, "jkbjkb");
+    //   res.status(400).send("Bad Request");
+    // } else {
+      let d1 = date.parse(req.body.to, "YYYY/MM/DD");
+      let d2 = date.parse(req.body.from, "YYYY/MM/DD"); //format - '2023/01/10'
+      try {
+        pre = await Product.find({
+          name: req.body.name,
+          requiredTest: req.body.requiredTest,
+          sampleType: req.body.sampleType,
+          $and: [{ to: { $gt: d1 } }, { from: { $lt: d2 } }],
+        });
+      } catch (error) {
+        return next(error);
+      }
+// res.json(pre)
+      res.status(200).send({ msg: "success", pre });
+      console.log(pre);
+    
   },
 
   async add(req, res, next) {
@@ -24,15 +48,13 @@ const itemController = {
       requiredTest: Joi.string().required(),
       sampleType: Joi.string().required(),
       date: Joi.date().required(),
-      
-
-     
     });
     const { error } = productsSchema.validate(req.body);
-    if(error){
-        return next(new Error('All filed are required.'))
+    if (error) {
+      return next(new Error("All filed are required."));
     }
-    const { name, workOder, noofSample,requiredTest,sampleType,date} = req.body;
+    const { name, workOder, noofSample, requiredTest, sampleType, date } =
+      req.body;
 
     let product;
     try {
@@ -43,7 +65,6 @@ const itemController = {
         requiredTest,
         sampleType,
         date,
-       
       });
 
       if (!product) {
@@ -63,25 +84,27 @@ const itemController = {
       requiredTest: Joi.string().required(),
       sampleType: Joi.string().required(),
       date: Joi.date().required(),
-     
     });
     const { error } = productsSchema.validate(req.body);
-    if(error){
-        return next(new Error('All filed are required.'))
+    if (error) {
+      return next(new Error("All filed are required."));
     }
-    const { name, workOder, noofSample,requiredTest,sampleType,date} = req.body;
+    const { name, workOder, noofSample, requiredTest, sampleType, date } =
+      req.body;
 
     let product;
     try {
-      product = await Product.findByIdAndUpdate({_id:req.params.id},{
-        name,
-        workOder,
-        noofSample,
-        requiredTest,
-        sampleType,
-        date,
-      
-      });
+      product = await Product.findByIdAndUpdate(
+        { _id: req.params.id },
+        {
+          name,
+          workOder,
+          noofSample,
+          requiredTest,
+          sampleType,
+          date,
+        }
+      );
 
       if (!product) {
         return next(new Error("Product Not Add"));
@@ -92,20 +115,17 @@ const itemController = {
     res.json(product);
   },
 
-  async delete(req,res,next){
-   let product;
-   try{
-    product= await Product.findByIdAndRemove({_id:req.params.id})
-    if(!product){
-        return next(new Error('Noting to delete'))
+  async delete(req, res, next) {
+    let product;
+    try {
+      product = await Product.findByIdAndRemove({ _id: req.params.id });
+      if (!product) {
+        return next(new Error("Noting to delete"));
+      }
+    } catch (error) {
+      return next(error);
     }
-
-   }catch(error){
-    return next(error)
-   }
-   res.json(product)
-
-
-  }
+    res.json(product);
+  },
 };
 export default itemController;

@@ -2,7 +2,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import errorhandller from './error/errorHandller'
 import Router from './Router'
-
+const bodyParser = require('body-parser')
 const app= express()
 const PORT= 3002
 
@@ -20,7 +20,7 @@ if(error){
 
 
 
-
+app.use(express.urlencoded({extended:false}))
 app.use(express.json())
 app.use('/api',Router)
 

@@ -16,3 +16,5 @@ Router.delete("/delete/:id", itemController.delete);
 Router.post("/addlab",labController.addlab);
 Router.delete("/deletelab/:id",labController.deletelab);
 export default Router;
+ //==============previus Report-----------------
+ Router.post("/getPrevStockInInfo",itemController.getPrevStockInInfo)
