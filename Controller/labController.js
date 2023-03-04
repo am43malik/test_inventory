@@ -5,13 +5,32 @@ import Lab from '../Model/lab'
 
 const labController={
 
+
+    async alllab(req,res,next){
+        let lab;
+        try{
+            lab= await Lab.find()
+
+            if(!lab){
+                return next(new Error('Lab data is not Available'))
+            }
+
+        }catch(error){
+            return next(error)
+        }
+
+        res.json(lab)
+    },
+
+
+
     async addlab(req,res,next){
         const labsectionSchema= Joi.object({
             labSelection:Joi.string().required()
         })
 
         const{error}= labsectionSchema.validate(req.body)
-        if(!error){
+        if(error){
             return next(new Error('All filed are required.'))
         }
 

@@ -13,8 +13,9 @@ Router.post("/add", itemController.add);
 Router.put("/update/:id", itemController.update);
 Router.delete("/delete/:id", itemController.delete);
 //------------lab Route-----------------------------//
+Router.get("/alllab",labController.alllab)
 Router.post("/addlab",labController.addlab);
 Router.delete("/deletelab/:id",labController.deletelab);
+//==============previus Report-----------------
+Router.post("/getPrevStockInInfo",itemController.getPrevStockInInfo)
 export default Router;
- //==============previus Report-----------------
- Router.post("/getPrevStockInInfo",itemController.getPrevStockInInfo)

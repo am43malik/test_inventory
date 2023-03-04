@@ -43,17 +43,18 @@ const itemController = {
   async add(req, res, next) {
     const productsSchema = Joi.object({
       name: Joi.string().required(),
-      workOder: Joi.number().required(),
-      noofSample: Joi.number().required(),
+      workOder: Joi.string().required(),
+      noofSample: Joi.string().required(),
       requiredTest: Joi.string().required(),
       sampleType: Joi.string().required(),
       date: Joi.date().required(),
+      lab:Joi.string().required(),
     });
     const { error } = productsSchema.validate(req.body);
     if (error) {
       return next(new Error("All filed are required."));
     }
-    const { name, workOder, noofSample, requiredTest, sampleType, date } =
+    const { name, workOder, noofSample, requiredTest, sampleType, date,lab } =
       req.body;
 
     let product;
@@ -65,6 +66,7 @@ const itemController = {
         requiredTest,
         sampleType,
         date,
+        lab,
       });
 
       if (!product) {
@@ -77,25 +79,25 @@ const itemController = {
   },
 
   async update(req, res, next) {
-    const productsSchema = Joi.object({
-      name: Joi.string().required(),
-      workOder: Joi.number().required(),
-      noofSample: Joi.number().required(),
-      requiredTest: Joi.string().required(),
-      sampleType: Joi.string().required(),
-      date: Joi.date().required(),
-    });
-    const { error } = productsSchema.validate(req.body);
-    if (error) {
-      return next(new Error("All filed are required."));
-    }
-    const { name, workOder, noofSample, requiredTest, sampleType, date } =
+    // const updateSchema = Joi.object({
+    //   name: Joi.string(),
+    //   workOder: Joi.number(),
+    //   noofSample: Joi.number(),
+    //   requiredTest: Joi.string(),
+    //   sampleType: Joi.string(),
+    //   date: Joi.date(),
+    // });
+    // const { error } = updateSchema.validate(req.body);
+    // if (error) {
+    //   return next(error);
+    // }
+    const { name, workOder, noofSample, requiredTest, sampleType, date ,lab} =
       req.body;
-
+ console.log(req.body,'reqbody')
     let product;
     try {
       product = await Product.findByIdAndUpdate(
-        { _id: req.params.id },
+        { _id:req.params.id },
         {
           name,
           workOder,
@@ -103,12 +105,12 @@ const itemController = {
           requiredTest,
           sampleType,
           date,
-        }
+          lab,
+        },{new: true}
       );
-
-      if (!product) {
-        return next(new Error("Product Not Add"));
-      }
+console.log(product,'product')
+console.log(req.params.id,'id')
+      
     } catch (error) {
       return next(error);
     }

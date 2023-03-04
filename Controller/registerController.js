@@ -2,7 +2,8 @@ import Joi from "joi";
 
 import bcrypt from "bcrypt";
 import Item from "../Model/Item";
-import jsonwebservise from "../../Rest Api/error/jsonwebtoken";
+import jsonwebservise from "../error/jsonwebtoken";
+
 
 const registerController = {
   async register(req, res, next) {
