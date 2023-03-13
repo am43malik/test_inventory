@@ -1,8 +1,7 @@
-
 import mongoose from "mongoose";
 
 const Schema=mongoose.Schema;
-const productSchema= new Schema({
+const DnaSchema= new Schema({
     name:{type:String,require:true},
     workOder:{type:String,require:true},
     noofSample:{type:String,require:true},
@@ -10,14 +9,6 @@ const productSchema= new Schema({
     sampleType:{type:String,require:true},
     date:{type:Date,require:true},
     RequiredAnalysis:{type:String,require:true}
-    
+    },{timestamps:true})
 
-
-
-
-
-    
-
-},{timestamps:true})
-
-export default mongoose.model('product',productSchema,'products')
+export default mongoose.model('Dna',DnaSchema,'Dnas')

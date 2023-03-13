@@ -1,12 +1,11 @@
 import Joi from "joi";
-import Item from "../Model/Item";
-import Product from "../Model/Product";
+import Projectbrucella from "../Model/Projectbrucella";
 const date = require("date-and-time");
-const itemController = {
-  async items(req, res, next) {
+const ProjectbrucellaController = {
+  async itemsProjectbrucella(req, res, next) {
     let item;
     try {
-      item = await Product.find();
+      item = await Projectbrucella.find();
       if (!item) {
         return next(new Error("items not found!"));
       }
@@ -22,25 +21,24 @@ const itemController = {
     //   console.log(req.body.to, "jkbjkb");
     //   res.status(400).send("Bad Request");
     // } else {
-      let d1 = date.parse(req.body.to, "YYYY/MM/DD");
-      let d2 = date.parse(req.body.from, "YYYY/MM/DD"); //format - '2023/01/10'
-      try {
-        pre = await Product.find({
-          name: req.body.name,
-          requiredTest: req.body.requiredTest,
-          sampleType: req.body.sampleType,
-          $and: [{ to: { $gt: d1 } }, { from: { $lt: d2 } }],
-        });
-      } catch (error) {
-        return next(error);
-      }
-// res.json(pre)
-      res.status(200).send({ msg: "success", pre });
-      console.log(pre);
-    
+    let d1 = date.parse(req.body.to, "YYYY/MM/DD");
+    let d2 = date.parse(req.body.from, "YYYY/MM/DD"); //format - '2023/01/10'
+    try {
+      pre = await Projectbrucella.find({
+        name: req.body.name,
+        requiredTest: req.body.requiredTest,
+        sampleType: req.body.sampleType,
+        $and: [{ to: { $gt: d1 } }, { from: { $lt: d2 } }],
+      });
+    } catch (error) {
+      return next(error);
+    }
+    // res.json(pre)
+    res.status(200).send({ msg: "success", pre });
+    console.log(pre);
   },
 
-  async add(req, res, next) {
+  async addProjectbrucella(req, res, next) {
     const productsSchema = Joi.object({
       name: Joi.string().required(),
       workOder: Joi.string().required(),
@@ -48,25 +46,25 @@ const itemController = {
       requiredTest: Joi.string().required(),
       sampleType: Joi.string().required(),
       date: Joi.date().required(),
-      // lab:Joi.string().required(),
+      RequiredAnalysis: Joi.string().required(),
     });
     const { error } = productsSchema.validate(req.body);
     if (error) {
       return next(error);
     }
-    const { name, workOder, noofSample, requiredTest, sampleType, date,lab } =
+    const { name, workOder, noofSample, requiredTest, sampleType, date, RequiredAnalysis } =
       req.body;
 
     let product;
     try {
-      product = await Product.create({
+      product = await Projectbrucella.create({
         name,
         workOder,
         noofSample,
         requiredTest,
         sampleType,
         date,
-      // lab,
+        RequiredAnalysis,
       });
 
       if (!product) {
@@ -78,7 +76,7 @@ const itemController = {
     res.json(product);
   },
 
-  async update(req, res, next) {
+  async updateProjectbrucella(req, res, next) {
     // const updateSchema = Joi.object({
     //   name: Joi.string(),
     //   workOder: Joi.number(),
@@ -91,13 +89,13 @@ const itemController = {
     // if (error) {
     //   return next(error);
     // }
-    const { name, workOder, noofSample, requiredTest, sampleType, date ,lab} =
+    const { name, workOder, noofSample, requiredTest, sampleType, date, RequiredAnalysis } =
       req.body;
- console.log(req.body,'reqbody')
+    console.log(req.body, "reqbody");
     let product;
     try {
-      product = await Product.findByIdAndUpdate(
-        { _id:req.params.id },
+      product = await Projectbrucella.findByIdAndUpdate(
+        { _id: req.params.id },
         {
           name,
           workOder,
@@ -105,22 +103,22 @@ const itemController = {
           requiredTest,
           sampleType,
           date,
-          lab,
-        },{new: true}
+          RequiredAnalysis,
+        },
+        { new: true }
       );
-console.log(product,'product')
-console.log(req.params.id,'id')
-      
+      console.log(product, "product");
+      console.log(req.params.id, "id");
     } catch (error) {
       return next(error);
     }
     res.json(product);
   },
 
-  async delete(req, res, next) {
+  async deleteProjectbrucella(req, res, next) {
     let product;
     try {
-      product = await Product.findByIdAndRemove({ _id: req.params.id });
+      product = await Projectbrucella.findByIdAndRemove({ _id: req.params.id });
       if (!product) {
         return next(new Error("Noting to delete"));
       }
@@ -130,4 +128,4 @@ console.log(req.params.id,'id')
     res.json(product);
   },
 };
-export default itemController;
+export default ProjectbrucellaController;

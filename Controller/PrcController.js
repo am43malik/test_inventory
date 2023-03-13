@@ -1,12 +1,12 @@
 import Joi from "joi";
-import Item from "../Model/Item";
-import Product from "../Model/Product";
+
+import Prc from '../Model/Pcr'
 const date = require("date-and-time");
-const itemController = {
-  async items(req, res, next) {
+const PrcController = {
+  async itemsPrc(req, res, next) {
     let item;
     try {
-      item = await Product.find();
+      item = await Prc.find();
       if (!item) {
         return next(new Error("items not found!"));
       }
@@ -25,7 +25,7 @@ const itemController = {
       let d1 = date.parse(req.body.to, "YYYY/MM/DD");
       let d2 = date.parse(req.body.from, "YYYY/MM/DD"); //format - '2023/01/10'
       try {
-        pre = await Product.find({
+        pre = await Prc.find({
           name: req.body.name,
           requiredTest: req.body.requiredTest,
           sampleType: req.body.sampleType,
@@ -40,7 +40,7 @@ const itemController = {
     
   },
 
-  async add(req, res, next) {
+  async addPrc(req, res, next) {
     const productsSchema = Joi.object({
       name: Joi.string().required(),
       workOder: Joi.string().required(),
@@ -48,25 +48,25 @@ const itemController = {
       requiredTest: Joi.string().required(),
       sampleType: Joi.string().required(),
       date: Joi.date().required(),
-      // lab:Joi.string().required(),
+      RequiredAnalysis:Joi.string().required(),
     });
     const { error } = productsSchema.validate(req.body);
     if (error) {
       return next(error);
     }
-    const { name, workOder, noofSample, requiredTest, sampleType, date,lab } =
+    const { name, workOder, noofSample, requiredTest, sampleType, date,RequiredAnalysis } =
       req.body;
 
     let product;
     try {
-      product = await Product.create({
+      product = await Prc.create({
         name,
         workOder,
         noofSample,
         requiredTest,
         sampleType,
         date,
-      // lab,
+        RequiredAnalysis,
       });
 
       if (!product) {
@@ -78,7 +78,7 @@ const itemController = {
     res.json(product);
   },
 
-  async update(req, res, next) {
+  async updatePrc(req, res, next) {
     // const updateSchema = Joi.object({
     //   name: Joi.string(),
     //   workOder: Joi.number(),
@@ -91,12 +91,12 @@ const itemController = {
     // if (error) {
     //   return next(error);
     // }
-    const { name, workOder, noofSample, requiredTest, sampleType, date ,lab} =
+    const { name, workOder, noofSample, requiredTest, sampleType, date ,RequiredAnalysis} =
       req.body;
  console.log(req.body,'reqbody')
     let product;
     try {
-      product = await Product.findByIdAndUpdate(
+      product = await Prc.findByIdAndUpdate(
         { _id:req.params.id },
         {
           name,
@@ -105,7 +105,7 @@ const itemController = {
           requiredTest,
           sampleType,
           date,
-          lab,
+          RequiredAnalysis,
         },{new: true}
       );
 console.log(product,'product')
@@ -117,10 +117,10 @@ console.log(req.params.id,'id')
     res.json(product);
   },
 
-  async delete(req, res, next) {
+  async deletePrc(req, res, next) {
     let product;
     try {
-      product = await Product.findByIdAndRemove({ _id: req.params.id });
+      product = await Prc.findByIdAndRemove({ _id: req.params.id });
       if (!product) {
         return next(new Error("Noting to delete"));
       }
@@ -130,4 +130,4 @@ console.log(req.params.id,'id')
     res.json(product);
   },
 };
-export default itemController;
+export default PrcController;
